@@ -13,7 +13,8 @@ ax=gca()
 N_DET = 3
 ax.set_color_cycle([cm.jet(k) for k in linspace(0,1,N_DET)])
 
-pilier = OmR(m=25.e-9,
+pilier = OmR()#0.304)
+pilier.set_params(m=25.e-9,
         f_mech=4.e6,
         q=2e6,
         lambda_nm = 1064.,
@@ -24,8 +25,7 @@ pilier = OmR(m=25.e-9,
         i_incident=1000e-6,
         temp=1.,
         delta_hz=10,
-        detection_losses=0.0)#0.304)
-
+        detection_losses=0.0)
 pilier.freq = linspace(3.99e6,4.01e6, 1000)
 
 """
