@@ -7,7 +7,7 @@ current_dir = osp.join(osp.dirname(__file__))
 if current_dir=='':
     current_dir = '.'
 
-figure('Squeezing in cavity')
+fig = figure('Squeezing in cavity')
 cav = Cavity()
 cav.set_params(transmission_input=30e-6,
                 transmission_output=20e-6,
@@ -28,9 +28,11 @@ title('10dB input squeezing')
 show()
 
 
-savefig(current_dir +  '/figures/cavity_squeezing_input.png')
-savefig(current_dir +  '/figures/cavity_squeezing_input.pdf')
-figure("Phase of fields cavity")
+fig.savefig(current_dir +  '/figures/cavity_squeezing_input.png')
+fig.savefig(current_dir +  '/figures/cavity_squeezing_input.pdf')
+
+
+fig = figure("Phase of fields cavity")
 
 reflected = []
 transmitted = []
@@ -49,7 +51,7 @@ ylabel('Phase(rad.)')
 legend()
 show()
 
-figure('mean_fields', figsize=(12.9, 10.9))
+fig = figure('mean_fields', figsize=(12.9, 10.9))
 last=None
 for index, ((input_trans, out_trans, loss), title_) in enumerate((((1e-6,5e-6, 0), 'undercoupled'),
                                               ((5e-6, 5e-6,0), 'critically coupled'),
@@ -62,7 +64,7 @@ for index, ((input_trans, out_trans, loss), title_) in enumerate((((1e-6,5e-6, 0
     title(title_)
     reflected = []
     transmitted = []
-    deltas = linspace(-25*cav.bandwidth_hz, 25*cav.bandwidth_hz, 300)
+    deltas = linspace(-4*cav.bandwidth_hz, 4*cav.bandwidth_hz, 64)
     for delta_hz in deltas:
         cav.delta_hz = delta_hz
         reflected.append(cav.left.output.mean_field)#/cav.intra.mean_field))
@@ -70,13 +72,18 @@ for index, ((input_trans, out_trans, loss), title_) in enumerate((((1e-6,5e-6, 0
     reflected = array(reflected)
     transmitted = array(transmitted)
 
-    plot(real(reflected), imag(reflected),'o', label='reflected')
-    plot(real(transmitted), imag(transmitted),'o', label='transmitted')
+    paths = scatter(real(reflected), imag(reflected),marker='s', s=40,linewidths=0, label='reflected', c=[cm.bwr(x) for x in (deltas - deltas.min())/(deltas.max() - deltas.min())])
+    paths = scatter(real(transmitted), imag(transmitted),marker='^',s=40,linewidths=0,label='transmitted',c=[cm.bwr(x) for x in (deltas - deltas.min())/(deltas.max() - deltas.min())])
     xlabel('Real')
     ylabel('Imag')
+    paths.set_cmap(cm.bwr)
+    paths.set_array(deltas/cav.bandwidth_hz)
+    cb = colorbar(paths)
+    cb.set_label('$\Delta/$bandwidth')
+
     legend()
     gca().set_aspect('equal')
-    show()
+show()
 
-savefig(current_dir +  '/figures/cavity_mean_field.png')
-savefig(current_dir +  '/figures/cavity_mean_field.pdf')
+fig.savefig(current_dir +  '/figures/cavity_mean_field.png')
+fig.savefig(current_dir +  '/figures/cavity_mean_field.pdf')

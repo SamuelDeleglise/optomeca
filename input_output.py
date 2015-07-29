@@ -321,6 +321,18 @@ class Field(object):
 
         return array([min(linalg.eigvals(obj.cov)) for obj in self])
 
+
+    #    @property
+    #    def squeezing_angle(self):
+    #        """
+    #        Returns the lowest noise level for any quadrature (by diagonalizing the covariance matrix)
+    #        """
+    #
+    #        vals, vects = linalg.eig(cav.left.output.cov)
+    #        min_val = vals.min()
+    #        vects[][1]
+    #        return arctan2(real(vects[][1]),real(vects[vals.min()][0]))
+
     @property
     def anti_squeezing(self):
         """

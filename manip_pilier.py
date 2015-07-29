@@ -91,6 +91,7 @@ length = Slider(axlength,
              1000.0,
              valinit=150.,
              valfmt='%1.f $\mum')
+
 for i in (temp, slosses, sdl, length):
     i.on_changed(lambda event:button.label.set_text('calculate'))
 
